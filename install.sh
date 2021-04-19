@@ -17,9 +17,9 @@ echo -e "${BLUE}                                  https://github.com/NANI1734/Rx
 
 echo -e "${RED}                                   [!] This Tool Must Run As ROOT [!]${NC}"
 echo ""
-echo -e ${CYAN}              "Select Best Option : "
+echo -e ${CYAN}                "Select Best Option : "
 echo ""
-echo -e "${WHITE}              [1] Kali Linux / Parrot-Os "
+echo -e "${WHITE}              [1] Kali Linux / Parrot-Os / Any Linux OS Based On Debian"
 echo -e "${WHITE}              [0] Exit "
 echo -n -e "${RES} $(Rxploit shell)# >> "
 read choice
