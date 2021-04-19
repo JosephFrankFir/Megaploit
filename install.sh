@@ -21,7 +21,7 @@ echo -e ${CYAN}              "Select Best Option : "
 echo ""
 echo -e "${WHITE}              [1] Kali Linux / Parrot-Os "
 echo -e "${WHITE}              [0] Exit "
-echo -n -e "Z4nzu >> "
+echo -n -e "${RES} $(Rxploit shell)# >> "
 read choice
 
 INSTALL_DIR="$pwd:/Rxploit"
