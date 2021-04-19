@@ -13,7 +13,7 @@ WHITE='\e[37m'
 NC='\e[0m'
 purpal='\033[35m'
 
-echo -e "${BLUE}                                    https://github.com/NANI1734/Rxploit ${NC}"
+echo -e "${BLUE}                                  https://github.com/NANI1734/Rxploit ${NC}"
 
 echo -e "${RED}                                   [!] This Tool Must Run As ROOT [!]${NC}"
 echo ""
@@ -47,7 +47,7 @@ if [ $choice == 1 ]; then
 		echo "";
 		git clone https://github.com/NANI1734/Rxploit.git "$INSTALL_DIR";
 		echo "#!/bin/bash
-		python3 $INSTALL_DIR/server.py" '${1+"$@"}' > hackingtool;
+		python3 $INSTALL_DIR/server.py" '${1+"$@"}' > Rxploit;
 		sudo chmod +x Rxploit;
 		sudo cp Rxploit /usr/bin/;
 		rm Rxploit;
