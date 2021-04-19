@@ -13,7 +13,7 @@ WHITE='\e[37m'
 NC='\e[0m'
 purpal='\033[35m'
 
-echo -e "${BLUE}                                    https://github.com/Z4nzu/hackingtool ${NC}"
+echo -e "${BLUE}                                    https://github.com/NANI1734/Rxploit ${NC}"
 
 echo -e "${RED}                                   [!] This Tool Must Run As ROOT [!]${NC}"
 echo ""
@@ -24,7 +24,7 @@ echo -e "${WHITE}              [0] Exit "
 echo -n -e "Z4nzu >> "
 read choice
 
-INSTALL_DIR="pwd:/hackingtool"
+INSTALL_DIR="$pwd:/Rxploit"
 BIN_DIR="/usr/bin/"
 if [ $choice == 1 ]; then 
 	echo "[*] Checking Internet Connection .."
