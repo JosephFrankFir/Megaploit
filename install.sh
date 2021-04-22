@@ -47,7 +47,10 @@ if [ $choice == 1 ]; then
 		echo "";
 		git clone https://github.com/NANI1734/Rxploit.git "$INSTALL_DIR";
 		echo "#!/bin/bash
-		python3 $INSTALL_DIR/server.py" '${1+"$@"}' > Rxploit;
+		python3 $INSTALL_DIR/server.py" '${1+"$@"}' > Rxploit-server;
+		echo "#!/bin/bash
+		python3 $INSTALL_DIR/backdoor.py" '${1+"$@"}' > Rxploit-backdoor;
+		
 		sudo chmod +x Rxploit;
 		sudo cp Rxploit /usr/bin/;
 		rm Rxploit;
