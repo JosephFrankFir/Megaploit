@@ -1,4 +1,4 @@
-The Rxploit is released under a MIT license. See [COPYING](https://github.com/NANI1734/Rxploit/blob/info/COPYING.md) and []() for more details.
+The Rxploit is released under a MIT license. See [COPYING](https://github.com/NANI1734/Rxploit/blob/info/COPYING.md) and [LICENSE](https://github.com/NANI1734/Rxploit/blob/info/LICENSE) for more details.
 
 The latest version of this software is available from: coming soom
 
