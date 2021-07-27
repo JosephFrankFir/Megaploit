@@ -146,7 +146,7 @@ while True:
          num = int(command[8:])
          tarnum = targets[num]
          tarip = ips[num]
-         targets_reqs(tarip, tarnum)
+         targets_reqs(tarnum, tarip)
       except:
          print(termcolor.colored("[-] No session under that ID number", "red"))
    elif command == "exit":
