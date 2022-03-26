@@ -127,7 +127,7 @@ def target_reqs():
                   break
           target.settimeout(None)
           f.close()
-          os.replace("recorded%d.wav" % (count), "images/recorded%d.wav" % (count))
+          os.replace("recorded%d.wav" % (count), "recordings/recorded%d.wav" % (count))
           count += 1
           print(termcolor.colored('[+] Done recorded file', 'green'))
 
