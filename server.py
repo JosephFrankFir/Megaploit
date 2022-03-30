@@ -15,8 +15,8 @@ _github = "https://github.com/JosephFrankFir/Rxploit"
 # setup argument
 ap = argparse.ArgumentParser()
 ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
-ap.add_argument("-p", "--port", required=True, help="Port")
 ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
+ap.add_argument("-p", "--port", required=True, help="Port")
 args = vars(ap.parse_args())
 
 if args['lhost']:

