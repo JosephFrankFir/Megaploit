@@ -20,7 +20,7 @@ echo -e "${RED}                                   [!] This Tool Must Run As ROOT
 echo ""
 echo -e ${CYAN}              "Select Best Option : "
 echo ""
-echo -e "${WHITE}	       [2] Arch linux"
+echo -e "${WHITE}	             [2] Arch linux"
 echo -e "${WHITE}              [1] Kali Linux / Parrot-Os / Any debian based os"
 echo -e "${WHITE}              [0] Exit "
 echo -n -e " >> "
