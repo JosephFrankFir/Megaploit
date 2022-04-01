@@ -17,7 +17,7 @@ deal with dependencies on your own.
 ### Using Rxploit
 
 Rxploit can do all sorts of things. The first thing you'll want to do
-is ```python3 server.py -rh *victim ip* -p *port*```, but after that, you'll probably let target open the backdoor file.
+is ```python3 server.py -rh *victim ip* -lh *your ip* -p *port*```, but after that, you'll probably let target open the backdoor file.
 
 ### Contributing
 
