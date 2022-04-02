@@ -13,3 +13,4 @@ python3-xlib==0.15
 PyTweening==1.0.3
 termcolor==1.1.0
 argparse
+pynput
