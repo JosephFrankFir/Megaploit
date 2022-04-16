@@ -1,6 +1,5 @@
-The Rxploit is released under a MIT license.
-See [COPYING](https://github.com/JosephFrankFir/Megaploit/blob/info/COPYING.md)
-and [LICENSE](https://github.com/JosephFrankFir/Megaploit/blob/info/LICENSE) for more details.
+The Rxploit is released under a GNU GPL3 license.
+[LICENSE](https://github.com/JosephFrankFir/Megaploit/blob/main/LICENSE).
 
 Bug tracking and development information can be found
 at: [Click me](https://github.com/JosephFrankFir/Megaploit/issues)
