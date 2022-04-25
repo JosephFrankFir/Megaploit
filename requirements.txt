@@ -12,5 +12,7 @@ PyScreeze==0.1.26
 python3-xlib==0.15
 PyTweening==1.0.3
 termcolor==1.1.0
-argparse
-pynput
+argparse==1.4.0
+pynput==1.7.6
+mss==6.1.0
+opencv-python==4.5.5.64

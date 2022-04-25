@@ -5,8 +5,7 @@ import threading
 import time
 import pyautogui
 
-resolution = pyautogui.size()
-print(resolution)
+
 
 
 class Camera(object):
