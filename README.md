@@ -6,7 +6,7 @@ at: [Click me](https://github.com/JosephFrankFir/Megaploit/issues)
 
 ### Easy Install
 ```bash
-wget http://github.com/JosephFrankFir/Megaploit/blob/main/install.sh
+wget https://github.com/JosephFrankFir/Megaploit/releases/download/v1.3-beta-final-update/install.sh
 chmod +x ./install.sh
 sudo ./install.sh
 ```
