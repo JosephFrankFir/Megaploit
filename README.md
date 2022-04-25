@@ -4,6 +4,13 @@ The Rxploit is released under a GNU GPL3 license.
 Bug tracking and development information can be found
 at: [Click me](https://github.com/JosephFrankFir/Megaploit/issues)
 
+### Easy Install
+```bash
+wget http://github.com/JosephFrankFir/Megaploit/blob/main/install.sh
+chmod +x ./install.sh
+sudo ./install.sh
+```
+
 ### Installing
 
 Generally, you have to install python3 and pip, which Rxploit based on. See the Dev Environment Setup if you'd like to
