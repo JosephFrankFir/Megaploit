@@ -10,7 +10,7 @@ import py_compile
 # main veriables
 _author = "Joseph frank"
 _ver = 1.3
-_github = "https://github.com/JosephFrankFir/Rxploit"
+_github = "https://github.com/JosephFrankFir/Megaploit"
 
 # setup argument
 ap = argparse.ArgumentParser()
